@@ -1,0 +1,39 @@
+{% extends 'main.html' %}
+
+{% block title %} All items {% endblock %}
+
+{% block content %}  
+
+<div class="order">
+    {% for item in items_in_order %}
+    <ul>
+        {{item.name}}
+    </ul>
+    {% endfor %}
+    <p class="order-cost">${{order.get_total_cost_in_dollars}} USD</p>
+    <form action="{% url 'buy-ordered' %}" method="POST">
+        {% csrf_token %}
+        <button type="submit">Buy</button>
+    </form>
+    <a href="{% url 'clear-order' %}">Clear</a>
+</div>
+<hr>
+
+{% for item in items %}
+    <div class="item">
+        <a href="{% url 'item' item.id %}"><h1>{{item.name}}</h1></a>
+        <h2>{{item.description}}</h2>
+            <p class="price">${{item.get_price_in_dollars}} USD</p>  
+        <form action="{% url 'buy' item.id %}" method="POST">
+            {% csrf_token %}
+            <button type="submit">Buy</button>
+        </form>
+        {% if item.id not in order.get_as_list %}
+        <a href="{% url 'add-item-to-order' item.id %}">[+] Add to order</a>
+        {% else %}
+        <a href="{% url 'delete-item-from-order' item.id %}">[x] Delete from order</a>
+        {% endif %}
+    </div>
+    <p></p>
+{% endfor %}
+{% endblock %}  

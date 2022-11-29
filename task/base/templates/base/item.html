@@ -1,0 +1,14 @@
+{% extends 'main.html' %}
+
+{% block title %} {{item.name}} {% endblock %}
+
+{% block content %}
+<div class="item">
+    <h1>{{item.name}}</h1>
+    <h2>{{item.description}}</h2>
+    <p>${{item.get_price_in_dollars}} USD</p>
+    <form action="{% url 'buy' item.id %}" method="POST">
+        {% csrf_token %}
+        <button type="submit">Buy</button>
+    </form>
+{% endblock %}
